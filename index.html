@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="images/logo.svg" />
     <title>Ice Cream Builder</title>
     <link rel="stylesheet" href="styles.css" />
-   
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
 
   <body>
@@ -33,19 +33,8 @@
       <!-- body start -->
       <div class="mainBody" id="body">
         <div class="container" id="iceCreamBuilder">
-          <!-- icecream start -->
-          <div>
-            <div class="icecream" id="icecream">
-            <p class="cone"></p>
-            <div
-                class="scoop"
-                v-for="cartItem in cart"
-                :class="cartItem.name.toLowerCase()"
-            ></div>
-            <div class="cherry" v-if="cart.length > 0"></div>
-            <div class="question" v-else></div>
-            </div>
-        </div>
+          <!-- ice cream start -->
+          <ice-cream :cart="cart"></ice-cream>
           <!-- ice cream end -->
 
           <!-- builder start -->
@@ -53,24 +42,26 @@
             <div class="builder">
               <h3>
                 Build your cool Ice Cream
-                <span class="quantity">0</span
+                <span class="quantity" :style="cart.length === 0 ? {color: 'red'} : {}">{{cart.length}}</span
                 >
               </h3>
               <!-- items start -->
               <div id="items">
                 <ul>
                   <!-- item start -->
-                  <li class="item">
-                    <span>Vanilla</span>
+                  <li class="item" v-for="variant in variants" :key="variant.id">
+                    <span>{{variant.name}}</span>
                     <div class="right">
                       <button
                         type="button"
-                        class="plus rounded">
+                        class="plus rounded"
+                        v-on:click="addToCart(variant.id)">
                         +
                       </button>
                       <button
                         type="button"
-                        class="minus rounded" >
+                        class="minus rounded" 
+                        v-on:click="removeFromCart(variant.id)">
                         -
                       </button>
                     </div>
@@ -83,52 +74,16 @@
               <!-- total price start -->
               <div class="total" id="total">
                 <div>Total Price</div>
-                <div>0 Tk</div>
+                <div>{{total}} Tk</div>
               </div>
               <!-- total price end -->
-              <button type="button" class="order rounded">
+              <button type="button" class="order rounded" v-on:click="toggleModal">
                 Proceed
               </button>
             </div>
 
             <!-- modal start -->
-            <div id="modal">
-              <div class="backdrop"></div>
-              <div class="modalBody">
-              <div class="formContainer" id="orderForm">
-                  <h1>Complete the form below and hit submit</h1>
-                  <form class="orderForm">
-                  <ul>
-                      <li>
-                      <input
-                          type="text"
-                          class="fieldStyle fieldSplit alignLeft"
-                          placeholder="Name"
-                      />
-                      <input
-                          type="text"
-                          class="fieldStyle fieldSplit alignRight"
-                          placeholder="Phone no."
-                      />
-                      </li>
-                      <input
-                          type="hidden" class="fieldStyle fieldSplit alignRight"
-                      />
-                      </li>
-                      <li>
-                      <textarea
-                          class="fieldStyle"
-                          placeholder="Address"
-                      ></textarea>
-                      </li>
-                      <li>
-                      <input type="submit" value="Submit" />
-                      </li>
-                  </ul>
-                  </form>
-              </div>
-              </div>
-          </div>
+          <order-form :cart="cart" :total="total" v-if="showModal" @toggle-modal="toggleModal" @clear-cart="clearCart"></order-form>
             <!-- modal end -->
           </div>
           <!-- builder end -->
@@ -139,20 +94,24 @@
       <!-- footer start -->
       <footer>
         <div class="container" id="footer">
-          <div>Copyright &copy;
-            <script>
+          <div>Copyright &copy;2024
+           <!--  <script>
               document.write(new Date().getFullYear())
-            </script>
+            </script> -->
           </div>
           <div class="textRight">
             Built with <span class="red">&hearts;</span> by
-            <a href="https://www.iamdipta.xyz/" target="_blank"
-              >Dipta Saha</a
-            >
+            <a href="https://www.iamdipta.xyz/" target="_blank">Dipta Saha</a>
           </div>
         </div>
       </footer>
       <!-- footer end -->
     </div>
+    <script src=" ./main.js"></script>
+    <script src=" ./component/iceCream.js"></script>
+    <script src=" ./component/orderForm.js"></script>
+    <script>
+      const mountedapp = app.mount("#app");
+    </script>
   </body>
 </html>
